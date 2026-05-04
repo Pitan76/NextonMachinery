@@ -2,6 +2,7 @@ package net.pitan76.nexton.machinery.client;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
+import net.pitan76.mcpitanlib.api.util.client.ScreenUtil;
 import net.pitan76.nexton.machinery.screen.FuelGeneratorScreenHandler;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawBackgroundArgs;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
@@ -63,8 +64,7 @@ public class FuelGeneratorScreen extends ContainerGuiScreen<FuelGeneratorScreenH
 
         // Energy amount
         if (isPointInRegion(this.x + 20, this.y + 16, 14, 46, x, y)) {
-            // TODO: add tooltip draw helper to MCPitanLib
-            args.drawObjectDM.getContext().drawTooltip(this.textRenderer, TextUtil.literal(this.handler.blockEntity.getEnergyStored() + " / " + this.handler.blockEntity.getCapacityEnergy() + " FE"), x, y);
+            ScreenUtil.RendererUtil.drawTooltip(args.drawObjectDM, this.textRenderer, TextUtil.literal(this.handler.blockEntity.getEnergyStored() + " / " + this.handler.blockEntity.getCapacityEnergy() + " FE"), x, y);
         }
 
     }

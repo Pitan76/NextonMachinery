@@ -1,50 +1,56 @@
 package net.pitan76.nexton.machinery.block.base;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.pitan76.nexton.machinery.NextonMachinery;
-import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
-import net.pitan76.nexton.machinery.api.state.EIProperties;
-import net.pitan76.nexton.machinery.api.state.IActiveHolder;
-import net.pitan76.nexton.machinery.block.entity.base.MachineBlockEntityWithExtendedContainer;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
+import net.pitan76.mcpitanlib.api.block.args.v2.PlacementStateArgs;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v3.CompatBlock;
 import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
 import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
-import net.pitan76.mcpitanlib.api.event.block.PlacementStateArgs;
 import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
-import net.pitan76.mcpitanlib.api.util.PropertyUtil;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.api.state.property.BooleanProperty;
+import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
+import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.mcpitanlib.midohra.world.World;
+import net.pitan76.nexton.machinery.NextonMachinery;
+import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
+import net.pitan76.nexton.machinery.api.state.NextonProperties;
+import net.pitan76.nexton.machinery.api.state.IActiveHolder;
+import net.pitan76.nexton.machinery.block.entity.base.MachineBlockEntityWithExtendedContainer;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class MachineBlock extends ExtendBlock implements ExtendBlockEntityProvider, IActiveHolder {
+public abstract class MachineBlock extends CompatBlock implements ExtendBlockEntityProvider, IActiveHolder {
 
-    public static DirectionProperty FACING = PropertyUtil.horizontalFacing();
-    public static BooleanProperty ACTIVE = EIProperties.ACTIVE;
-    public static BooleanProperty POWERED = PropertyUtil.powered();
+    public static DirectionProperty FACING = CompatProperties.HORIZONTAL_FACING;
+    public static BooleanProperty ACTIVE = NextonProperties.ACTIVE;
+    public static BooleanProperty POWERED = CompatProperties.POWERED;
 
     public MachineBlock(CompatibleBlockSettings settings) {
         super(settings);
-        setNewDefaultState(getNewDefaultState().with(FACING, Direction.NORTH).with(ACTIVE, false).with(POWERED, false));
+        setDefaultState(getDefaultMidohraState()
+                .with(FACING, Direction.NORTH)
+                .with(ACTIVE, false)
+                .with(POWERED, false));
     }
 
-    public ActionResult onRightClick(BlockUseEvent e) {
+    public CompatActionResult onRightClick(BlockUseEvent e) {
         if (e.isSneaking()) return e.pass();
         if (e.isClient()) return e.success();
 
         if (!e.hasBlockEntity()) return e.pass();
 
-        BlockEntity blockEntity = e.getBlockEntity();
-        if (!(blockEntity instanceof MachineBlockEntityWithExtendedContainer)) return e.pass();
+        BlockEntityWrapper blockEntityWrapper = e.getBlockEntityWrapper();
+        if (!blockEntityWrapper.instanceOf(MachineBlockEntityWithExtendedContainer.class)) return e.pass();
 
-        e.player.openExtendedMenu((MachineBlockEntityWithExtendedContainer) blockEntity);
+        MachineBlockEntityWithExtendedContainer blockEntity =
+                blockEntityWrapper.getCompatBlockEntity(MachineBlockEntityWithExtendedContainer.class);
+
+        e.player.openExtendedMenu(blockEntity);
         return e.success();
     }
 
@@ -63,7 +69,7 @@ public abstract class MachineBlock extends ExtendBlock implements ExtendBlockEnt
 
     @Override
     public @Nullable BlockState getPlacementState(PlacementStateArgs args) {
-        return args.withBlockState(FACING, args.getHorizontalPlayerFacing().getOpposite());
+        return args.with(FACING, args.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
@@ -81,8 +87,8 @@ public abstract class MachineBlock extends ExtendBlock implements ExtendBlockEnt
 
     @Override
     public void setActive(World world, BlockPos pos, boolean active) {
-        BlockState state = WorldUtil.getBlockState(world, pos);
-        world.setBlockState(pos, PropertyUtil.with(state, ACTIVE, active));
+        BlockState state = world.getBlockState(pos);
+        world.setBlockState(pos, state.with(ACTIVE, active));
     }
 
     public Direction getFacing(BlockState state) {
