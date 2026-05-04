@@ -6,7 +6,7 @@ import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 import java.io.File;
 
 public class Config {
-    public static File configFile = new File(PlatformUtil.getConfigFolderAsFile(), "nexton/machinery.json");
+    public static File configFile = new File(PlatformUtil.getConfigFolderAsFile(), "nexton_industries/machinery.json");
     public static JsonConfig config = new JsonConfig(configFile);
 
     public static double reborn_energy_conversion_rate = 1.0;

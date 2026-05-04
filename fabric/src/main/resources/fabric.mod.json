@@ -3,7 +3,7 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "${mod_name}",
-  "description": "Nexton Machinery is technology mod for Minecraft.\nIf install the mod, add energy in the world. And add machines and item that use the energy",
+  "description": "A mod introduces various machines and processing units used for automation, and resource transformation. It expands gameplay with industrial-scale production systems.",
   "authors": [
     "Pitan"
   ],
