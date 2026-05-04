@@ -17,10 +17,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.pitan76.nexton.fabric.NextonMachineryFabric"
+      "net.pitan76.nexton.machinery.fabric.NextonMachineryFabric"
     ],
     "client": [
-      "net.pitan76.nexton.fabric.NextonMachineryClientFabric"
+      "net.pitan76.nexton.machinery.fabric.NextonMachineryClientFabric"
     ]
   },
   "depends": {
