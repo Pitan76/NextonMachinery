@@ -69,6 +69,7 @@ public abstract class MachineBlock extends CompatBlock implements ExtendBlockEnt
 
     @Override
     public @Nullable BlockState getPlacementState(PlacementStateArgs args) {
+        if (!args.isBlockExist()) return null;
         return args.with(FACING, args.getHorizontalPlayerFacing().getOpposite());
     }
 
