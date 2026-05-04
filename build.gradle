@@ -34,7 +34,7 @@ subprojects {
         // Fabric Yarn Mappings
         mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
 
-        modApi "net.pitan76:mcpitanlib-common+${rootProject.mcpitanlib_version}"
+        modApi "net.pitan76:mcpitanlib-common-${rootProject.mcpitanlib_version}"
     }
 
     /*
@@ -45,7 +45,7 @@ subprojects {
             curseforge {
                 apiKey = System.getenv("CURSEFORGE_TOKEN")
                 project {
-                    id = ''
+                    id = 'nextondynamics'
                     changelog = rootProject.changelog + "\nMCPitanLib version: " + mcpitanlib_version.split(":")[1]
                     releaseType = 'release'
 
@@ -92,7 +92,7 @@ subprojects {
         if (System.getenv("MODRINTH_TOKEN") != null) {
             modrinth {
                 token = System.getenv("MODRINTH_TOKEN")
-                projectId = ''
+                projectId = 'nextondynamics'
                 versionNumber = project.mod_version + "-" + modLoader
 
                 gameVersions = []
