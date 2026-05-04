@@ -1,6 +1,6 @@
 {
-  "itemGroup.eleind.main": "Electric Industry",
+  "itemGroup.nexton.main": "Nexton Machinery",
 
-  "block.eleind.generator": "Fuel Generator",
-  "block.eleind.electric_furnace": "Electric Furnace"
+  "block.nexton.generator": "Fuel Generator",
+  "block.nexton.electric_furnace": "Electric Furnace"
 }

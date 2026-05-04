@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "eleind:generator"
+          "name": "nexton:generator"
         }
       ],
       "conditions": [

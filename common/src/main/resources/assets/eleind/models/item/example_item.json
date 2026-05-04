@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "eleind:item/example_item"
+    "layer0": "nexton:item/example_item"
   }
 }

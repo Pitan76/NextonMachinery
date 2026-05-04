@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "eleind:block/generator"
+      "model": "nexton:block/generator"
     },
     "facing=east": {
-      "model": "eleind:block/generator",
+      "model": "nexton:block/generator",
       "y": 90
     },
     "facing=south": {
-      "model": "eleind:block/generator",
+      "model": "nexton:block/generator",
       "y": 180
     },
     "facing=west": {
-      "model": "eleind:block/generator",
+      "model": "nexton:block/generator",
       "y": 270
     }
   }

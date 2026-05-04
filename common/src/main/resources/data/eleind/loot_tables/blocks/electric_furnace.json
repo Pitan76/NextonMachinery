@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "eleind:electric_furnace"
+          "name": "nexton:electric_furnace"
         }
       ],
       "conditions": [

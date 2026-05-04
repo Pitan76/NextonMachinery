@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-    "particle": "eleind:block/machine/side",
-    "down": "eleind:block/machine/bottom",
-    "up": "eleind:block/machine/top",
-    "north": "eleind:block/generator",
-    "east": "eleind:block/machine/side",
-    "south": "eleind:block/machine/side",
-    "west": "eleind:block/machine/side"
+    "particle": "nexton:block/machine/side",
+    "down": "nexton:block/machine/bottom",
+    "up": "nexton:block/machine/top",
+    "north": "nexton:block/generator",
+    "east": "nexton:block/machine/side",
+    "south": "nexton:block/machine/side",
+    "west": "nexton:block/machine/side"
   }
 }
