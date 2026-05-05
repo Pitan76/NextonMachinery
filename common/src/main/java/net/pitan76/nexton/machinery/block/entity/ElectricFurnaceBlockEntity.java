@@ -38,7 +38,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
     }
 
     public ElectricFurnaceBlockEntity(TileCreateEvent e) {
-        this(BlockEntities.FUEL_GENERATOR.getOrNull(), e);
+        this(BlockEntities.ELECTRIC_FURNACE.getOrNull(), e);
     }
 
     @Override
