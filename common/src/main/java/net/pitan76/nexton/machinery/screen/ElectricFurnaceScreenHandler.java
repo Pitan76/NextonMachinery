@@ -18,7 +18,7 @@ public class ElectricFurnaceScreenHandler extends ExtendedBlockEntityContainerGu
     protected final Inventory inventory;
 
     public ElectricFurnaceScreenHandler(CreateMenuEvent e, PacketByteBuf buf) {
-        super(ScreenHandlers.FUEL_GENERATOR_SCREEN_HANDLER.get(), e, buf);
+        super(ScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER.get(), e, buf);
         this.inventory = InventoryUtil.createSimpleInventory(2);
         this.playerInventory = e.playerInventory;
 
@@ -26,7 +26,7 @@ public class ElectricFurnaceScreenHandler extends ExtendedBlockEntityContainerGu
     }
 
     public ElectricFurnaceScreenHandler(CreateMenuEvent e, Inventory inventory, ElectricFurnaceBlockEntity blockEntity) {
-        this(ScreenHandlers.FUEL_GENERATOR_SCREEN_HANDLER.get(), e, inventory);
+        this(ScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER.get(), e, inventory);
         this.blockEntity = blockEntity;
     }
 
