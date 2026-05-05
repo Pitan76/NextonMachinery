@@ -8,5 +8,6 @@ import static net.pitan76.nexton.machinery.NextonMachinery.MOD_ID;
 public class NextonMachineryClient {
     public static void init() {
         GuiRegistry.register(MOD_ID, ScreenHandlers.FUEL_GENERATOR_SCREEN_HANDLER.get(), FuelGeneratorScreen::new);
+        GuiRegistry.register(MOD_ID, ScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER.get(), ElectricFurnaceScreen::new);
     }
 }
