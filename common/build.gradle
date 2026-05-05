@@ -6,6 +6,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
+    modApi "net.pitan76:nextoncore-common:${project.property("mod_version")}-SNAPSHOT"
 }
 
 loom {

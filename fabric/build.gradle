@@ -32,6 +32,7 @@ dependencies {
     modImplementation 'TechReborn:TechReborn-1.20:5.10.4'
 
     modApi "net.pitan76:mcpitanlib-fabric-${rootProject.mcpitanlib_version}"
+    modApi "net.pitan76:nextoncore-fabric:${project.property("mod_version")}-SNAPSHOT"
 }
 
 processResources {

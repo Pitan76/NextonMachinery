@@ -2,7 +2,9 @@ package net.pitan76.nexton.machinery.item;
 
 import net.minecraft.item.Item;
 import net.pitan76.mcpitanlib.api.item.v2.ItemSettingsBuilder;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.item.ItemUtil;
+import net.pitan76.nexton.core.item.ItemGroups;
 import net.pitan76.nexton.machinery.block.Blocks;
 import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
 
@@ -20,5 +22,6 @@ public class Items {
     public static void init() {
         FUEL_GENERATOR = registry.registerItem(_id("generator"), () -> ItemUtil.create(Blocks.FUEL_GENERATOR.getOrNull(), STANDARD_ITEM_SETTINGS.build(_id("generator"))));
         ELECTRIC_FURNACE = registry.registerItem(_id("electric_furnace"), () -> ItemUtil.create(Blocks.ELECTRIC_FURNACE.getOrNull(), STANDARD_ITEM_SETTINGS.build(_id("electric_furnace"))));
+        ItemGroups.NI_GROUP.setIcon(() -> ItemStackUtil.create(FUEL_GENERATOR.get()));
     }
 }

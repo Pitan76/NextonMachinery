@@ -8,10 +8,10 @@ import static net.pitan76.nexton.machinery.NextonMachinery.registry;
 
 public class ItemGroups {
 
-    public static CreativeTabBuilder NI_GROUP = CreativeTabBuilder.create(_id("main"))
+    public static CreativeTabBuilder MACHINERY_GROUP = CreativeTabBuilder.create(_id("machinery"))
             .setIcon(() -> ItemStackUtil.create(Items.FUEL_GENERATOR.get()));
 
     public static void init() {
-        registry.registerItemGroup(NI_GROUP);
+        registry.registerItemGroup(MACHINERY_GROUP);
     }
 }
