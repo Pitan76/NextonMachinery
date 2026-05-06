@@ -6,9 +6,12 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
 import net.pitan76.mcpitanlib.api.util.IngredientUtil;
+import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
+import net.pitan76.mcpitanlib.midohra.item.MCItems;
 import net.pitan76.mcpitanlib.midohra.recipe.RecipeType;
 import net.pitan76.mcpitanlib.midohra.recipe.ServerRecipeManager;
 import net.pitan76.mcpitanlib.midohra.recipe.entry.RecipeEntry;
+import net.pitan76.mcpitanlib.midohra.recipe.input.TypedRecipeInputOrInventory;
 import net.pitan76.mcpitanlib.midohra.world.ServerWorld;
 import net.pitan76.nexton.machinery.NextonMachinery;
 import net.pitan76.nexton.machinery.api.energy.EnergyStorageProvider;
@@ -102,7 +105,8 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
     private ItemStack cachedResult = ItemStackUtil.empty();
 
     protected ItemStack getSmeltResult(ItemStack input) {
-        if (cachedInput != null && ItemStackUtil.areItemsEqual(cachedInput, input)) return cachedResult;
+//        System.out.println("Getting smelt result for: " + cachedInput + " (cached: " + cachedResult + ")");
+        if (cachedResult != null && ItemStackUtil.areItemsEqual(cachedInput, input)) return cachedResult;
 
         cachedInput = ItemStackUtil.copy(input);
         cachedResult = computeSmelt(input);
@@ -116,6 +120,12 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
 
         ServerRecipeManager manager = world.get().getRecipeManager();
 
+        CompatInventory inv = new CompatInventory(2);
+        inv.callSetStack(0, input);
+        inv.callSetStack(1, MCItems.COAL.createStack());
+
+        TypedRecipeInputOrInventory<CompatInventory> recipeInput = TypedRecipeInputOrInventory._of(inv);
+
         for (RecipeEntry entry : manager.getRecipeEntries()) {
             if (!entry.getRecipeType().equals(RecipeType.SMELTING)) continue;
 
@@ -124,7 +134,8 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
 
                 for (ItemStack stack : matches) {
                     if (ItemStackUtil.areItemsEqual(stack, input)) {
-                        return entry.getRecipe().getOutput(world.get()).toMinecraft();
+                        ItemStack result = entry.getRecipe().craft(recipeInput, world.get());
+                        return result;
                     }
                 }
             }
