@@ -4,11 +4,12 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
-import net.pitan76.nexton.machinery.api.energy.EnergyStorageProvider;
-import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
-import net.pitan76.nexton.machinery.api.energy.SimpleEnergyStorage;
-import net.pitan76.nexton.machinery.api.energy.util.EnergyUtil;
-import net.pitan76.nexton.machinery.block.entity.base.MachineBlockEntityWithExtendedContainer;
+import net.pitan76.nexton.core.NextonCore;
+import net.pitan76.nexton.core.api.block.entity.MachineBlockEntityWithExtendedContainer;
+import net.pitan76.nexton.core.api.energy.EnergyStorageProvider;
+import net.pitan76.nexton.core.api.energy.IEnergyStorage;
+import net.pitan76.nexton.core.api.energy.SimpleEnergyStorage;
+import net.pitan76.nexton.core.api.util.EnergyUtil;
 import net.pitan76.nexton.machinery.screen.FuelGeneratorScreenHandler;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
@@ -59,8 +60,10 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
             }
         }
 
-        EnergyUtil.transferNearby(this, getEnergyStored());
-        BlockEntityUtil.markDirty(this);
+        if (!NextonCore.isUsingRebornEnergy)
+            EnergyUtil.transferNearby(this, getEnergyStored());
+
+        callMarkDirty();
     }
 
     @Override

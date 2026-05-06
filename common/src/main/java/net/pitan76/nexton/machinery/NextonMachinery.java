@@ -1,14 +1,11 @@
 package net.pitan76.nexton.machinery;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
+import net.pitan76.nexton.core.api.energy.EnergyStorageManager;
 import net.pitan76.nexton.machinery.block.Blocks;
 import net.pitan76.nexton.machinery.block.entity.BlockEntities;
-import net.pitan76.nexton.machinery.item.ItemGroups;
 import net.pitan76.nexton.machinery.item.Items;
 import net.pitan76.nexton.machinery.screen.ScreenHandlers;
 import net.pitan76.mcpitanlib.api.CommonModInitializer;
-import net.pitan76.mcpitanlib.api.event.v0.EventRegistry;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 
@@ -19,11 +16,10 @@ public class NextonMachinery extends CommonModInitializer {
 
     public static NextonMachinery INSTANCE;
     public static CompatRegistryV2 registry;
-    public static boolean isUsingRebornEnergy = false;
 
     public NextonMachinery() {
         super();
-        registerEnergyStorage();
+        BlockEntities.getBookingEnergyStorageBlockEntity().forEach(EnergyStorageManager::registerEnergyStorage);
     }
 
     @Override
@@ -38,30 +34,6 @@ public class NextonMachinery extends CommonModInitializer {
         Items.init();
         BlockEntities.init();
         ScreenHandlers.init();
-
-        EventRegistry.ServerLifecycle.serverStopped((server) -> {
-            clearEnergyStorage();
-        });
-    }
-    
-    @ExpectPlatform
-    public static boolean isLoadedTeamRebornEnergy() {
-        return false;
-    }
-
-    @ExpectPlatform
-    public static void registerEnergyStorage() {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static void clearEnergyStorage() {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static void removeEnergyStorage(IEnergyStorage storage) {
-        throw new AssertionError();
     }
 
     // ----

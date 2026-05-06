@@ -4,7 +4,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.core.serialization.CompatMapCodec;
-import net.pitan76.nexton.machinery.block.base.MachineBlock;
+import net.pitan76.nexton.core.api.block.MachineBlock;
 import net.pitan76.nexton.machinery.block.entity.ElectricFurnaceBlockEntity;
 
 public class ElectricFurnaceBlock extends MachineBlock {

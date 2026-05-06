@@ -13,12 +13,12 @@ import net.pitan76.mcpitanlib.midohra.recipe.ServerRecipeManager;
 import net.pitan76.mcpitanlib.midohra.recipe.entry.RecipeEntry;
 import net.pitan76.mcpitanlib.midohra.recipe.input.TypedRecipeInputOrInventory;
 import net.pitan76.mcpitanlib.midohra.world.ServerWorld;
-import net.pitan76.nexton.machinery.NextonMachinery;
-import net.pitan76.nexton.machinery.api.energy.EnergyStorageProvider;
-import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
-import net.pitan76.nexton.machinery.api.energy.SimpleEnergyStorage;
-import net.pitan76.nexton.machinery.api.energy.util.EnergyUtil;
-import net.pitan76.nexton.machinery.block.entity.base.MachineBlockEntityWithExtendedContainer;
+import net.pitan76.nexton.core.NextonCore;
+import net.pitan76.nexton.core.api.block.entity.MachineBlockEntityWithExtendedContainer;
+import net.pitan76.nexton.core.api.energy.EnergyStorageProvider;
+import net.pitan76.nexton.core.api.energy.IEnergyStorage;
+import net.pitan76.nexton.core.api.energy.SimpleEnergyStorage;
+import net.pitan76.nexton.core.api.util.EnergyUtil;
 import net.pitan76.nexton.machinery.screen.ElectricFurnaceScreenHandler;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
@@ -97,7 +97,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
             setActive(false);
         }
 
-        if (!NextonMachinery.isUsingRebornEnergy)
+        if (!NextonCore.isUsingRebornEnergy)
             EnergyUtil.transferNearby(this, getEnergyStored());
     }
 
