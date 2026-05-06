@@ -43,7 +43,7 @@ public class FuelGeneratorScreen extends ContainerGuiScreen<FuelGeneratorScreenH
         int maxBurnTime = this.handler.blockEntity.maxBurnTime;
 
         if (burnTime > 0 && maxBurnTime > 0)
-            PartsRenderer.drawBurningBar(args.drawObjectDM, x + backgroundWidth / 2 - 8, y + 35 + 16, burnTime, maxBurnTime);
+            PartsRenderer.drawBurningBar(args.drawObjectDM, x + backgroundWidth / 2 - 8, y + 35 + 18, burnTime, maxBurnTime);
         else
             callDrawTexture(args.drawObjectDM, GuiTextures.BASE_FURNACE_BACKGROUND, x + backgroundWidth / 2 - 8, y + 35 + 16, 0, 166, 16, 16);
 

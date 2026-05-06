@@ -29,10 +29,14 @@ public class ElectricFurnaceScreen extends ContainerGuiScreen<ElectricFurnaceScr
     protected void drawForegroundOverride(DrawForegroundArgs args) {
         super.drawForegroundOverride(args);
 
-        double percentage = (double) this.handler.blockEntity.getEnergyStored() / this.handler.blockEntity.getCapacityEnergy() * 100;
+        int cookTime = this.handler.blockEntity.cookTime;
+        int cookTimeTotal = this.handler.blockEntity.cookTimeTotal;
+
+        double percentage = cookTimeTotal > 0 ? (double) (cookTimeTotal - cookTime) / cookTimeTotal * 100 : 0;
 
         percentage = Math.floor(percentage * 10) / 10;
-        drawText(args.drawObjectDM, TextUtil.literal(percentage + "%"), 78, 24);
+        Text percentageText = TextUtil.literal(percentage + "%");
+        drawText(args.drawObjectDM, percentageText, 88 - ScreenUtil.getWidth(percentageText) / 2, 24);
     }
 
     @Override
@@ -42,9 +46,12 @@ public class ElectricFurnaceScreen extends ContainerGuiScreen<ElectricFurnaceScr
         int cookTime = this.handler.blockEntity.cookTime;
         int cookTimeTotal = this.handler.blockEntity.cookTimeTotal;
 
-        if (cookTime > 0 && cookTimeTotal > 0)
-            PartsRenderer.drawBurningBar(args.drawObjectDM, x + backgroundWidth / 2 - 8, y + 35 + 16, cookTime, cookTimeTotal);
-        else
+        if (cookTime > 0 && cookTimeTotal > 0) {
+            PartsRenderer.drawBurningBar(args.drawObjectDM, x + 50, y + 35 + 18, cookTimeTotal, cookTimeTotal);
+            PartsRenderer.drawLeft2RightProgressBar(args.drawObjectDM, x + backgroundWidth / 2 - 12, y + 35, 16, 168, 16, 184, 24, 16, cookTimeTotal - cookTime, cookTimeTotal, GuiTextures.BASE_FURNACE_BACKGROUND);
+
+//            PartsRenderer.drawHorizontalArrowBar(args.drawObjectDM, x + backgroundWidth / 2 - 8, y + 35, cookTimeTotal - cookTime, cookTimeTotal);
+        } else
             callDrawTexture(args.drawObjectDM, GuiTextures.BASE_FURNACE_BACKGROUND, x + backgroundWidth / 2 - 8, y + 35 + 16, 0, 166, 16, 16);
 
         drawEnergyBar(args);

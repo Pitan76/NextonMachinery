@@ -41,8 +41,8 @@ public class ElectricFurnaceScreenHandler extends ExtendedBlockEntityContainerGu
     public void initSlots() {
         addPlayerMainInventorySlots(this.playerInventory, 8, 84);
         addPlayerHotbarSlots(this.playerInventory, 8, 142);
-        addNormalSlot(this.inventory, 0, 44, 35);
-        addNormalSlot(this.inventory, 1, 116, 35);
+        addNormalSlot(this.inventory, 0, 50, 35);
+        addNormalSlot(this.inventory, 1, 110, 35);
     }
 
     @Override
