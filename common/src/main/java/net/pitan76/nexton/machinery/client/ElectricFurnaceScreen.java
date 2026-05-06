@@ -17,6 +17,7 @@ import static net.pitan76.nexton.machinery.NextonMachinery._id;
 public class ElectricFurnaceScreen extends ContainerGuiScreen<ElectricFurnaceScreenHandler> {
     public ElectricFurnaceScreen(ElectricFurnaceScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+        setTitleX(getBackgroundWidth() / 2 - ScreenUtil.getWidth(title) / 2);
     }
 
     @Override

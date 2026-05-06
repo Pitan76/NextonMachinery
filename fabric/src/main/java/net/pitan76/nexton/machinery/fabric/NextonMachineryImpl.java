@@ -7,7 +7,6 @@ import net.pitan76.mcpitanlib.api.util.PlatformUtil;
 public class NextonMachineryImpl {
     public static void registerEnergyStorage() {
         if (isLoadedTeamRebornEnergy()) {
-            System.out.println("[NextonMachinery] Team Reborn Energy detected, registering energy storage...");
             RebornEnergyRegister.init();
         }
     }

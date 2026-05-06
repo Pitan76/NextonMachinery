@@ -1,7 +1,6 @@
 package net.pitan76.nexton.machinery;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.pitan76.mcpitanlib.api.util.Logger;
 import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
 import net.pitan76.nexton.machinery.block.Blocks;
 import net.pitan76.nexton.machinery.block.entity.BlockEntities;
@@ -33,7 +32,7 @@ public class NextonMachinery extends CommonModInitializer {
 
         Config.init();
 
-        ItemGroups.init();
+//        ItemGroups.init();
         Blocks.init();
         Items.init();
         BlockEntities.init();

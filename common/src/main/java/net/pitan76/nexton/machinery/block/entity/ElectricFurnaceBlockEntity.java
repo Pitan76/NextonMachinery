@@ -16,7 +16,6 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
-import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.guilib.api.block.entity.ExtendedBlockEntityWithContainer;
@@ -65,7 +64,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
                     //    cookTimeTotal = 0;
                 }
             }
-            BlockEntityUtil.markDirty(this);
+            callMarkDirty();
         }
 
         //EnergyUtil.transferNearby(this, getEnergyStored());
