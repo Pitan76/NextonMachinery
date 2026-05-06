@@ -29,7 +29,7 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
     public int maxBurnTime = 0;
 
     public static SimpleEnergyStorage.Builder energyStorageBuilder =
-            new SimpleEnergyStorage.Builder().capacity(10_000).maxInput(0).maxOutput(500);
+            new SimpleEnergyStorage.Builder().capacity(10_000).maxInput(0).maxOutput(500).canInsert(false).canExtract(true);
 
     private final IEnergyStorage energyStorage = energyStorageBuilder.build();
 

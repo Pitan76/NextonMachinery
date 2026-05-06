@@ -6,7 +6,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
 import net.pitan76.mcpitanlib.api.util.IngredientUtil;
-import net.pitan76.mcpitanlib.midohra.recipe.RecipeManager;
 import net.pitan76.mcpitanlib.midohra.recipe.RecipeType;
 import net.pitan76.mcpitanlib.midohra.recipe.ServerRecipeManager;
 import net.pitan76.mcpitanlib.midohra.recipe.entry.RecipeEntry;
@@ -29,10 +28,7 @@ import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.guilib.api.block.entity.ExtendedBlockEntityWithContainer;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedContainer implements EnergyStorageProvider {
 
@@ -42,7 +38,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
     public int cookTimeTotal;
 
     public static SimpleEnergyStorage.Builder energyStorageBuilder =
-            new SimpleEnergyStorage.Builder().capacity(10_000).maxInput(500).maxOutput(0);
+            new SimpleEnergyStorage.Builder().capacity(10_000).maxInput(500).maxOutput(0).canInsert(true).canExtract(false);
 
     private final IEnergyStorage energyStorage = energyStorageBuilder.build();
 
@@ -60,7 +56,6 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
         if (isClient()) return;
 
         ItemStack input = getInputStack();
-        ItemStack output = getOutputStack();
 
         // if empty input slot, stop
         if (input.isEmpty()) {
@@ -71,28 +66,30 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
             return;
         }
 
+        ItemStack result = getSmeltResult(input);
+
         // if it cannot output, stop
-        if (!canOutput(getSmeltResult(input))) {
+        if (!canOutput(result)) {
             setActive(false);
             callMarkDirty();
             return;
         }
 
-        if (!isCooking()) {
+        if (!input.isEmpty() && !result.isEmpty() && !isCooking()) {
             startCook();
-            setActive(true);
         }
 
-        if (hasEnergy()) {
-            cookTime--;
+        if (isCooking() && getEnergyStored() >= getConsumingEnergyAmountOnTick()) {
 
+            cookTime--;
             removeEnergyStored(getConsumingEnergyAmountOnTick());
-            setActive(true);
 
             if (cookTime <= 0) {
                 finishSmelt();
-                startCook(); // next cook
+                startCook();
             }
+
+            setActive(true);
         } else {
             setActive(false);
         }
@@ -105,11 +102,9 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
     private ItemStack cachedResult = ItemStackUtil.empty();
 
     protected ItemStack getSmeltResult(ItemStack input) {
-        if (ItemStackUtil.areItemsEqual(cachedInput, input)) {
-            return cachedResult;
-        }
+        if (cachedInput != null && ItemStackUtil.areItemsEqual(cachedInput, input)) return cachedResult;
 
-        cachedInput = input.copy();
+        cachedInput = ItemStackUtil.copy(input);
         cachedResult = computeSmelt(input);
 
         return cachedResult;
