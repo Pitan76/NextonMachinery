@@ -3,10 +3,19 @@ package net.pitan76.nexton.machinery.block.entity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
+import net.pitan76.mcpitanlib.api.util.IngredientUtil;
+import net.pitan76.mcpitanlib.midohra.recipe.RecipeManager;
+import net.pitan76.mcpitanlib.midohra.recipe.RecipeType;
+import net.pitan76.mcpitanlib.midohra.recipe.ServerRecipeManager;
+import net.pitan76.mcpitanlib.midohra.recipe.entry.RecipeEntry;
+import net.pitan76.mcpitanlib.midohra.world.ServerWorld;
+import net.pitan76.nexton.machinery.NextonMachinery;
 import net.pitan76.nexton.machinery.api.energy.EnergyStorageProvider;
 import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
 import net.pitan76.nexton.machinery.api.energy.SimpleEnergyStorage;
+import net.pitan76.nexton.machinery.api.energy.util.EnergyUtil;
 import net.pitan76.nexton.machinery.block.entity.base.MachineBlockEntityWithExtendedContainer;
 import net.pitan76.nexton.machinery.screen.ElectricFurnaceScreenHandler;
 import net.pitan76.mcpitanlib.api.entity.Player;
@@ -19,6 +28,11 @@ import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.guilib.api.block.entity.ExtendedBlockEntityWithContainer;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedContainer implements EnergyStorageProvider {
 
@@ -45,29 +59,101 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
         super.tick(e);
         if (isClient()) return;
 
-        if (!isEmptyEnergy() && canOutput()) {
-            ItemStack stack = getInputStack();
+        ItemStack input = getInputStack();
+        ItemStack output = getOutputStack();
 
-            if (stack.isEmpty()) { //&& AbstractFurnaceBlockEntity.canUseAsFuel()) {
-                cookTime = 0;
-                cookTimeTotal = 0;
-                setActive(false);
-            } else {
-                if (isCooking()) {
-                    cookTime -= 1;
-                    removeEnergyStored(getConsumingEnergyAmountOnTick());
-                } else {
-
-                    //boolean success = startCook();
-                    //setActive(success);
-                    //if (!success)
-                    //    cookTimeTotal = 0;
-                }
-            }
+        // if empty input slot, stop
+        if (input.isEmpty()) {
+            cookTime = 0;
+            cookTimeTotal = 0;
+            setActive(false);
             callMarkDirty();
+            return;
         }
 
-        //EnergyUtil.transferNearby(this, getEnergyStored());
+        // if it cannot output, stop
+        if (!canOutput(getSmeltResult(input))) {
+            setActive(false);
+            callMarkDirty();
+            return;
+        }
+
+        if (!isCooking()) {
+            startCook();
+            setActive(true);
+        }
+
+        if (hasEnergy()) {
+            cookTime--;
+
+            removeEnergyStored(getConsumingEnergyAmountOnTick());
+            setActive(true);
+
+            if (cookTime <= 0) {
+                finishSmelt();
+                startCook(); // next cook
+            }
+        } else {
+            setActive(false);
+        }
+
+        if (!NextonMachinery.isUsingRebornEnergy)
+            EnergyUtil.transferNearby(this, getEnergyStored());
+    }
+
+    private ItemStack cachedInput = ItemStackUtil.empty();
+    private ItemStack cachedResult = ItemStackUtil.empty();
+
+    protected ItemStack getSmeltResult(ItemStack input) {
+        if (ItemStackUtil.areItemsEqual(cachedInput, input)) {
+            return cachedResult;
+        }
+
+        cachedInput = input.copy();
+        cachedResult = computeSmelt(input);
+
+        return cachedResult;
+    }
+
+    protected ItemStack computeSmelt(ItemStack input) {
+        Optional<ServerWorld> world = getMidohraWorld().toServerWorld();
+        if (!world.isPresent()) return ItemStackUtil.empty();
+
+        ServerRecipeManager manager = world.get().getRecipeManager();
+
+        for (RecipeEntry entry : manager.getRecipeEntries()) {
+            if (!entry.getRecipeType().equals(RecipeType.SMELTING)) continue;
+
+            for (Ingredient ingredient : entry.getRecipe().getInputs()) {
+                ItemStack[] matches = IngredientUtil.getMatchingStacks(ingredient);
+
+                for (ItemStack stack : matches) {
+                    if (ItemStackUtil.areItemsEqual(stack, input)) {
+                        return entry.getRecipe().getOutput(world.get()).toMinecraft();
+                    }
+                }
+            }
+        }
+
+        return ItemStackUtil.empty();
+    }
+
+    protected void finishSmelt() {
+        ItemStack input = getInputStack();
+        ItemStack output = getOutputStack();
+
+        ItemStack result = getSmeltResult(input);
+
+        if (result.isEmpty()) return;
+        if (!canOutput(result)) return;
+
+        input.decrement(1);
+
+        if (output.isEmpty()) {
+            setStack(1, result.copy());
+        } else {
+            output.increment(result.getCount());
+        }
     }
 
     @Override
@@ -92,12 +178,15 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
         return getStack(1);
     }
 
-    public boolean canOutput() {
-        ItemStack stack = getOutputStack();
-        if (stack.isEmpty()) return true;
-        if (!ItemStackUtil.areItemsEqual(stack, getOutputStack())) return false;
+    public boolean canOutput(ItemStack result) {
+        ItemStack output = getOutputStack();
 
-        return stack.getCount() + 1 <= stack.getMaxCount();
+        if (result.isEmpty()) return false;
+        if (output.isEmpty()) return true;
+
+        if (!ItemStackUtil.areItemsEqual(output, result)) return false;
+
+        return output.getCount() + result.getCount() <= output.getMaxCount();
     }
 
     public long getConsumingEnergyAmountOnTick() {

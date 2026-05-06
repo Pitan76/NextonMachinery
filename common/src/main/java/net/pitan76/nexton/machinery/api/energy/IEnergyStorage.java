@@ -163,6 +163,10 @@ public interface IEnergyStorage {
         return getEnergyStored() <= 0;
     }
 
+    default boolean hasEnergy() {
+        return !isEmptyEnergy();
+    }
+
     default boolean isNotEmptyEnergy() {
         return !isEmptyEnergy();
     }

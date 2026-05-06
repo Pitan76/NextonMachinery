@@ -19,6 +19,7 @@ public class NextonMachinery extends CommonModInitializer {
 
     public static NextonMachinery INSTANCE;
     public static CompatRegistryV2 registry;
+    public static boolean isUsingRebornEnergy = false;
 
     public NextonMachinery() {
         super();

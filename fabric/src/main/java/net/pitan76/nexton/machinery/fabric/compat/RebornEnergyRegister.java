@@ -1,6 +1,7 @@
 package net.pitan76.nexton.machinery.fabric.compat;
 
 import net.minecraft.block.entity.BlockEntityType;
+import net.pitan76.nexton.machinery.NextonMachinery;
 import net.pitan76.nexton.machinery.api.energy.EnergyStorageProvider;
 import net.pitan76.nexton.machinery.api.energy.IEnergyStorage;
 import net.pitan76.nexton.machinery.block.entity.BlockEntities;
@@ -22,6 +23,8 @@ public class RebornEnergyRegister {
         isInitialized = true;
 
         System.out.println("[NextonMachinery] Team Reborn Energy detected, registering energy storage...");
+
+        NextonMachinery.isUsingRebornEnergy = true;
 
         List<RegistryResult<BlockEntityType<?>>> tileTypes = BlockEntities.getBookingEnergyStorageBlockEntity();
         for (RegistryResult<BlockEntityType<?>> result : tileTypes) {
