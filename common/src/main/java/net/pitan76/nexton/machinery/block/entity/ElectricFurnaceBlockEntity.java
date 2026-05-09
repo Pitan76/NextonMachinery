@@ -5,6 +5,7 @@ import net.minecraft.recipe.Ingredient;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.IngredientUtil;
 import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
+import net.pitan76.mcpitanlib.api.util.inventory.InventoryWrapper;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.item.MCItems;
@@ -233,6 +234,6 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
 
     @Override
     public SimpleScreenHandler createMenu(CreateMenuEvent e) {
-        return new ElectricFurnaceScreenHandler(e, this, this);
+        return new ElectricFurnaceScreenHandler(e, InventoryWrapper.of(this), this);
     }
 }

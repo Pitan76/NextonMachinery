@@ -2,6 +2,7 @@ package net.pitan76.nexton.machinery.block.entity;
 
 import net.minecraft.network.PacketByteBuf;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.inventory.InventoryWrapper;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.nbt.NbtCompound;
@@ -129,6 +130,6 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
 
     @Override
     public SimpleScreenHandler createMenu(CreateMenuEvent e) {
-        return new FuelGeneratorScreenHandler(e, this, this);
+        return new FuelGeneratorScreenHandler(e, InventoryWrapper.of(this), this);
     }
 }

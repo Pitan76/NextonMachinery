@@ -1,6 +1,5 @@
 package net.pitan76.nexton.machinery.block;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.core.serialization.CompatMapCodec;
@@ -33,7 +32,7 @@ public class FuelGeneratorBlock extends MachineBlock {
     }
 
     @Override
-    public BlockEntity createBlockEntity(TileCreateEvent e) {
+    public FuelGeneratorBlockEntity createBlockEntity(TileCreateEvent e) {
         return new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR, e, energyPerTick, capacity, maxOutput);
     }
 

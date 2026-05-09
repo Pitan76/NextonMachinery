@@ -1,6 +1,5 @@
 package net.pitan76.nexton.machinery.block;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.core.serialization.CompatMapCodec;
@@ -21,7 +20,7 @@ public class ElectricFurnaceBlock extends MachineBlock {
     }
 
     @Override
-    public BlockEntity createBlockEntity(TileCreateEvent e) {
+    public ElectricFurnaceBlockEntity createBlockEntity(TileCreateEvent e) {
         return new ElectricFurnaceBlockEntity(e);
     }
 

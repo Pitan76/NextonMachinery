@@ -1,46 +1,46 @@
 package net.pitan76.nexton.machinery.screen;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerType;
+import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
+import net.pitan76.mcpitanlib.api.util.inventory.CompatPlayerInventory;
+import net.pitan76.mcpitanlib.api.util.inventory.ICompatInventory;
 import net.pitan76.nexton.machinery.block.entity.ElectricFurnaceBlockEntity;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
-import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.guilib.api.container.ExtendedBlockEntityContainerGui;
 
 public class ElectricFurnaceScreenHandler extends ExtendedBlockEntityContainerGui<ElectricFurnaceBlockEntity> {
 
-    protected final PlayerInventory playerInventory;
-    protected final Inventory inventory;
+    protected final CompatPlayerInventory playerInventory;
+    protected final ICompatInventory inventory;
 
     public ElectricFurnaceScreenHandler(CreateMenuEvent e, PacketByteBuf buf) {
         super(ScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER.get(), e, buf);
-        this.inventory = InventoryUtil.createSimpleInventory(2);
-        this.playerInventory = e.playerInventory;
+        this.inventory = new CompatInventory(2);
+        this.playerInventory = e.getCompatPlayerInventory();
 
         initSlots();
     }
 
-    public ElectricFurnaceScreenHandler(CreateMenuEvent e, Inventory inventory, ElectricFurnaceBlockEntity blockEntity) {
+    public ElectricFurnaceScreenHandler(CreateMenuEvent e, ICompatInventory inventory, ElectricFurnaceBlockEntity blockEntity) {
         this(ScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER.get(), e, inventory);
         this.blockEntity = blockEntity;
     }
 
-    protected ElectricFurnaceScreenHandler(ScreenHandlerType<?> type, CreateMenuEvent e, Inventory inventory) {
+    protected ElectricFurnaceScreenHandler(ScreenHandlerType<?> type, CreateMenuEvent e, ICompatInventory inventory) {
         super(type, e);
         this.inventory = inventory;
-        this.playerInventory = e.playerInventory;
+        this.playerInventory = e.getCompatPlayerInventory();
 
         initSlots();
     }
 
     public void initSlots() {
-        addPlayerMainInventorySlots(this.playerInventory, 8, 84);
-        addPlayerHotbarSlots(this.playerInventory, 8, 142);
+        addPlayerMainInventorySlots(this.playerInventory.getRaw(), 8, 84);
+        addPlayerHotbarSlots(this.playerInventory.getRaw(), 8, 142);
         addNormalSlot(this.inventory, 0, 50, 35);
         addNormalSlot(this.inventory, 1, 110, 35);
     }

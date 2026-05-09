@@ -67,7 +67,7 @@ public class ElectricFurnaceScreen extends ContainerGuiScreen<ElectricFurnaceScr
 
         // Energy amount
         if (isPointInRegion(this.x + 20, this.y + 16, 14, 46, x, y)) {
-            ScreenUtil.RendererUtil.drawTooltip(args.drawObjectDM, this.textRenderer, TextUtil.literal(this.handler.blockEntity.getEnergyStored() + " / " + this.handler.blockEntity.getCapacityEnergy() + " FE"), x, y);
+            ScreenUtil.RendererUtil.drawTooltip(args.drawObjectDM, TextUtil.literal(this.handler.blockEntity.getEnergyStored() + " / " + this.handler.blockEntity.getCapacityEnergy() + " FE"), x, y);
         }
 
     }
