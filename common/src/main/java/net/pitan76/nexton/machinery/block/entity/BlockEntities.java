@@ -34,7 +34,6 @@ public class BlockEntities {
 
     public static <T extends CompatBlockEntity> TypedBlockEntityTypeWrapper<T> registerWithEnergyStorage(String id, BlockEntityTypeBuilder<T> builder) {
         TypedBlockEntityTypeWrapper<T> result = register(id, builder);
-
         bookingEnergyStorageBlockEntity.add(result);
         return result;
     }
