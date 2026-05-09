@@ -1,9 +1,10 @@
 package net.pitan76.nexton.machinery.block.entity;
 
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
+import net.pitan76.mcpitanlib.midohra.nbt.NbtCompound;
 import net.pitan76.nexton.core.NextonCore;
 import net.pitan76.nexton.core.api.block.entity.MachineBlockEntityWithExtendedContainer;
 import net.pitan76.nexton.core.api.energy.EnergyStorageProvider;
@@ -19,7 +20,6 @@ import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.core.registry.FuelRegistry;
 import net.pitan76.mcpitanlib.guilib.api.block.entity.ExtendedBlockEntityWithContainer;
 
@@ -31,14 +31,14 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
 
     private final IEnergyStorage energyStorage;
 
-    public FuelGeneratorBlockEntity(BlockEntityType<?> type, TileCreateEvent e) {
+    public FuelGeneratorBlockEntity(BlockEntityTypeWrapper type, TileCreateEvent e) {
         this(type, e, 3, 10_000, 500);
     }
 
-    public FuelGeneratorBlockEntity(BlockEntityType<?> type, TileCreateEvent e, int energyPerTick, int capacity, int maxOutput) {
+    public FuelGeneratorBlockEntity(BlockEntityTypeWrapper type, TileCreateEvent e, int energyPerTick, int capacity, int maxOutput) {
         super(type, e);
         this.energyPerTick = energyPerTick;
-        energyStorage = new SimpleEnergyStorage.Builder()
+        this.energyStorage = new SimpleEnergyStorage.Builder()
                 .capacity(capacity)
                 .maxInput(0)
                 .maxOutput(maxOutput)
@@ -50,7 +50,7 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
     @Override
     public void tick(TileTickEvent<ExtendedBlockEntityWithContainer> e) {
         super.tick(e);
-        if (isClient()) return;
+        if (e.isClient()) return;
 
         if (!isFullEnergy()) {
             ItemStack stack = getStack(0);
@@ -74,15 +74,17 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
     @Override
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtUtil.putInt(args.nbt, "burnTime", burnTime);
-        NbtUtil.putInt(args.nbt, "maxBurnTime", maxBurnTime);
+        NbtCompound nbt = args.getNbtM();
+        nbt.putInt("burnTime", burnTime);
+        nbt.putInt("maxBurnTime", maxBurnTime);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        burnTime = NbtUtil.getInt(args.nbt, "burnTime");
-        maxBurnTime = NbtUtil.getInt(args.nbt, "maxBurnTime");
+        NbtCompound nbt = args.getNbtM();
+        burnTime = nbt.getInt("burnTime");
+        maxBurnTime = nbt.getInt("maxBurnTime");
     }
 
     public long getEnergyPerTick() {

@@ -18,6 +18,6 @@ public class ScreenHandlers {
     }
 
     public static <T extends ScreenHandler> SupplierResult<ScreenHandlerType<T>> register(String id, ExtendedScreenHandlerTypeBuilder.Factory2<T> factory) {
-        return registry.registerScreenHandlerType(_id(id), new ExtendedScreenHandlerTypeBuilder<>(factory));
+        return registry.getCompatRegistry().registerScreenHandlerType(_id(id), new ExtendedScreenHandlerTypeBuilder<>(factory));
     }
 }

@@ -12,6 +12,6 @@ public class ItemGroups {
             .setIcon(() -> ItemStackUtil.create(Items.FUEL_GENERATOR.get()));
 
     public static void init() {
-        registry.registerItemGroup(MACHINERY_GROUP);
+        registry.getCompatRegistry().registerItemGroup(MACHINERY_GROUP);
     }
 }

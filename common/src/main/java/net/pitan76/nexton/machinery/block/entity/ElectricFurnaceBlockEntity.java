@@ -1,12 +1,12 @@
 package net.pitan76.nexton.machinery.block.entity;
 
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
 import net.pitan76.mcpitanlib.api.util.IngredientUtil;
 import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
 import net.pitan76.mcpitanlib.midohra.item.MCItems;
 import net.pitan76.mcpitanlib.midohra.recipe.RecipeType;
 import net.pitan76.mcpitanlib.midohra.recipe.ServerRecipeManager;
@@ -45,12 +45,12 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
 
     private final IEnergyStorage energyStorage = energyStorageBuilder.build();
 
-    public ElectricFurnaceBlockEntity(BlockEntityType<?> type, TileCreateEvent e) {
+    public ElectricFurnaceBlockEntity(BlockEntityTypeWrapper type, TileCreateEvent e) {
         super(type, e);
     }
 
     public ElectricFurnaceBlockEntity(TileCreateEvent e) {
-        this(BlockEntities.ELECTRIC_FURNACE.getOrNull(), e);
+        this(BlockEntities.ELECTRIC_FURNACE, e);
     }
 
     @Override

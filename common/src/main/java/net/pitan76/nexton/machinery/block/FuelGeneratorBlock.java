@@ -34,7 +34,7 @@ public class FuelGeneratorBlock extends MachineBlock {
 
     @Override
     public BlockEntity createBlockEntity(TileCreateEvent e) {
-        return new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR.get(), e, energyPerTick, capacity, maxOutput);
+        return new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR, e, energyPerTick, capacity, maxOutput);
     }
 
     @Override
