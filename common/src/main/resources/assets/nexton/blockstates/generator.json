@@ -1,18 +1,34 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,active=false": {
       "model": "nexton:block/generator"
     },
-    "facing=east": {
+    "facing=east,active=false": {
       "model": "nexton:block/generator",
       "y": 90
     },
-    "facing=south": {
+    "facing=south,active=false": {
       "model": "nexton:block/generator",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,active=false": {
       "model": "nexton:block/generator",
+      "y": 270
+    },
+
+    "facing=north,active=true": {
+      "model": "nexton:block/generator_on"
+    },
+    "facing=east,active=true": {
+      "model": "nexton:block/generator_on",
+      "y": 90
+    },
+    "facing=south,active=true": {
+      "model": "nexton:block/generator_on",
+      "y": 180
+    },
+    "facing=west,active=true": {
+      "model": "nexton:block/generator_on",
       "y": 270
     }
   }

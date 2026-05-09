@@ -1,4 +1,6 @@
 {
   "block.nexton.generator": "Fuel Generator",
+  "block.nexton.generator_mk2": "Fuel Generator MK-2",
+  "block.nexton.generator_mk3": "Fuel Generator MK-3",
   "block.nexton.electric_furnace": "Electric Furnace"
 }

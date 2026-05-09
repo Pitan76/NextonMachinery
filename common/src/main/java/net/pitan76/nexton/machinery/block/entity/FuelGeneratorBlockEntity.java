@@ -18,7 +18,6 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
-import net.pitan76.mcpitanlib.api.util.BlockEntityUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.core.registry.FuelRegistry;
@@ -28,18 +27,24 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
 
     public int burnTime = 0;
     public int maxBurnTime = 0;
+    public final int energyPerTick;
 
-    public static SimpleEnergyStorage.Builder energyStorageBuilder =
-            new SimpleEnergyStorage.Builder().capacity(10_000).maxInput(0).maxOutput(500).canInsert(false).canExtract(true);
-
-    private final IEnergyStorage energyStorage = energyStorageBuilder.build();
+    private final IEnergyStorage energyStorage;
 
     public FuelGeneratorBlockEntity(BlockEntityType<?> type, TileCreateEvent e) {
-        super(type, e);
+        this(type, e, 3, 10_000, 500);
     }
 
-    public FuelGeneratorBlockEntity(TileCreateEvent e) {
-        this(BlockEntities.FUEL_GENERATOR.getOrNull(), e);
+    public FuelGeneratorBlockEntity(BlockEntityType<?> type, TileCreateEvent e, int energyPerTick, int capacity, int maxOutput) {
+        super(type, e);
+        this.energyPerTick = energyPerTick;
+        energyStorage = new SimpleEnergyStorage.Builder()
+                .capacity(capacity)
+                .maxInput(0)
+                .maxOutput(maxOutput)
+                .canExtract(true)
+                .canInsert(false)
+                .build();
     }
 
     @Override
@@ -51,7 +56,7 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
             ItemStack stack = getStack(0);
             if (isBurning()) {
                 burnTime -= 3;
-                addEnergyStored(getGeneratingEnergyAmountOnTick());
+                addEnergyStored(getEnergyPerTick());
             } else {
                 boolean success = startBurn(stack);
                 setActive(success);
@@ -80,8 +85,8 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
         maxBurnTime = NbtUtil.getInt(args.nbt, "maxBurnTime");
     }
 
-    public long getGeneratingEnergyAmountOnTick() {
-        return 3;
+    public long getEnergyPerTick() {
+        return energyPerTick;
     }
 
     public boolean isBurning() {
@@ -96,7 +101,7 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
     public boolean startBurn(ItemStack stack) {
         if (ItemStackUtil.isEmpty(stack)) return false;
 
-        int time = FuelRegistry.get(stack);
+        int time = FuelRegistry.get(callGetWorld(), stack);
         if (time == 0) return false;
 
         ItemStackUtil.decrementCount(stack, 1);

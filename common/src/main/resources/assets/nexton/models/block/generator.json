@@ -4,7 +4,7 @@
     "particle": "nexton:block/machine/side",
     "down": "nexton:block/machine/bottom",
     "up": "nexton:block/machine/top",
-    "north": "nexton:block/generator",
+    "north": "nexton:block/generator/mk1",
     "east": "nexton:block/machine/side",
     "south": "nexton:block/machine/side",
     "west": "nexton:block/machine/side"
