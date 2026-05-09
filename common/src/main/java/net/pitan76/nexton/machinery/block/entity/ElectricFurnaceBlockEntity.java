@@ -1,13 +1,14 @@
 package net.pitan76.nexton.machinery.block.entity;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.screen.ScreenHandler;
+import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.IngredientUtil;
 import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
+import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.item.MCItems;
+import net.pitan76.mcpitanlib.midohra.nbt.NbtCompound;
 import net.pitan76.mcpitanlib.midohra.recipe.RecipeType;
 import net.pitan76.mcpitanlib.midohra.recipe.ServerRecipeManager;
 import net.pitan76.mcpitanlib.midohra.recipe.entry.RecipeEntry;
@@ -28,9 +29,9 @@ import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.guilib.api.block.entity.ExtendedBlockEntityWithContainer;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedContainer implements EnergyStorageProvider {
@@ -101,14 +102,14 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
             EnergyUtil.transferNearby(this, getEnergyStored());
     }
 
-    private ItemStack cachedInput = ItemStackUtil.empty();
-    private ItemStack cachedResult = ItemStackUtil.empty();
+    private ItemStack cachedInput = ItemStack.EMPTY;
+    private ItemStack cachedResult = ItemStack.EMPTY;
 
     protected ItemStack getSmeltResult(ItemStack input) {
 //        System.out.println("Getting smelt result for: " + cachedInput + " (cached: " + cachedResult + ")");
-        if (cachedResult != null && ItemStackUtil.areItemsEqual(cachedInput, input)) return cachedResult;
+        if (cachedResult != null && ItemStackUtil.areItemsEqual(cachedInput.toMinecraft(), input.toMinecraft())) return cachedResult;
 
-        cachedInput = ItemStackUtil.copy(input);
+        cachedInput = input.copy();
         cachedResult = computeSmelt(input);
 
         return cachedResult;
@@ -116,7 +117,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
 
     protected ItemStack computeSmelt(ItemStack input) {
         Optional<ServerWorld> world = getMidohraWorld().toServerWorld();
-        if (!world.isPresent()) return ItemStackUtil.empty();
+        if (!world.isPresent()) return ItemStack.EMPTY;
 
         ServerRecipeManager manager = world.get().getRecipeManager();
 
@@ -130,18 +131,17 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
             if (!entry.getRecipeType().equals(RecipeType.SMELTING)) continue;
 
             for (Ingredient ingredient : entry.getRecipe().getInputs()) {
-                ItemStack[] matches = IngredientUtil.getMatchingStacks(ingredient);
+                ItemStack[] matches = Arrays.stream(IngredientUtil.getMatchingStacks(ingredient)).map(ItemStack::of).toArray(ItemStack[]::new);
 
                 for (ItemStack stack : matches) {
-                    if (ItemStackUtil.areItemsEqual(stack, input)) {
-                        ItemStack result = entry.getRecipe().craft(recipeInput, world.get());
-                        return result;
+                    if (ItemStackUtil.areItemsEqual(stack.toMinecraft(), input.toMinecraft())) {
+                        return ItemStack.of(entry.getRecipe().craft(recipeInput, world.get()));
                     }
                 }
             }
         }
 
-        return ItemStackUtil.empty();
+        return ItemStack.EMPTY;
     }
 
     protected void finishSmelt() {
@@ -156,7 +156,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
         input.decrement(1);
 
         if (output.isEmpty()) {
-            setStack(1, result.copy());
+            setStack(1, result.copy().toMinecraft());
         } else {
             output.increment(result.getCount());
         }
@@ -165,23 +165,25 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
     @Override
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
-        NbtUtil.putInt(args.nbt, "cookTime", cookTime);
-        NbtUtil.putInt(args.nbt, "cookTimeTotal", cookTimeTotal);
+        NbtCompound nbt = args.getNbtM();
+        nbt.putInt("cookTime", cookTime);
+        nbt.putInt("cookTimeTotal", cookTimeTotal);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
-        cookTime = NbtUtil.getInt(args.nbt, "cookTime");
-        cookTimeTotal = NbtUtil.getInt(args.nbt, "cookTimeTotal");
+        NbtCompound nbt = args.getNbtM();
+        cookTime = nbt.getInt("cookTime");
+        cookTimeTotal = nbt.getInt("cookTimeTotal");
     }
 
     public ItemStack getInputStack() {
-        return getStack(0);
+        return ItemStack.of(getStack(0));
     }
 
     public ItemStack getOutputStack() {
-        return getStack(1);
+        return ItemStack.of(getStack(1));
     }
 
     public boolean canOutput(ItemStack result) {
@@ -190,7 +192,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
         if (result.isEmpty()) return false;
         if (output.isEmpty()) return true;
 
-        if (!ItemStackUtil.areItemsEqual(output, result)) return false;
+        if (!ItemStackUtil.areItemsEqual(output.toMinecraft(), result.toMinecraft())) return false;
 
         return output.getCount() + result.getCount() <= output.getMaxCount();
     }
@@ -230,7 +232,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntityWithExtendedCo
     }
 
     @Override
-    public ScreenHandler createMenu(CreateMenuEvent e) {
+    public SimpleScreenHandler createMenu(CreateMenuEvent e) {
         return new ElectricFurnaceScreenHandler(e, this, this);
     }
 }

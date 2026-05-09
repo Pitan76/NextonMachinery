@@ -1,9 +1,9 @@
 package net.pitan76.nexton.machinery.block.entity;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
+import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
+import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.nbt.NbtCompound;
 import net.pitan76.nexton.core.NextonCore;
 import net.pitan76.nexton.core.api.block.entity.MachineBlockEntityWithExtendedContainer;
@@ -19,7 +19,6 @@ import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.network.PacketByteUtil;
-import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.core.registry.FuelRegistry;
 import net.pitan76.mcpitanlib.guilib.api.block.entity.ExtendedBlockEntityWithContainer;
 
@@ -53,7 +52,7 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
         if (e.isClient()) return;
 
         if (!isFullEnergy()) {
-            ItemStack stack = getStack(0);
+            ItemStack stack = ItemStack.of(getStack(0));
             if (isBurning()) {
                 burnTime -= 3;
                 addEnergyStored(getEnergyPerTick());
@@ -101,12 +100,12 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
     }
 
     public boolean startBurn(ItemStack stack) {
-        if (ItemStackUtil.isEmpty(stack)) return false;
+        if (stack.isEmpty()) return false;
 
-        int time = FuelRegistry.get(callGetWorld(), stack);
+        int time = FuelRegistry.get(callGetWorld(), stack.toMinecraft());
         if (time == 0) return false;
 
-        ItemStackUtil.decrementCount(stack, 1);
+        stack.decrement(1);
         startBurn(time);
         return true;
     }
@@ -129,7 +128,7 @@ public class FuelGeneratorBlockEntity extends MachineBlockEntityWithExtendedCont
     }
 
     @Override
-    public ScreenHandler createMenu(CreateMenuEvent e) {
+    public SimpleScreenHandler createMenu(CreateMenuEvent e) {
         return new FuelGeneratorScreenHandler(e, this, this);
     }
 }
