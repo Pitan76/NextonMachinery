@@ -1,10 +1,10 @@
 package net.pitan76.nexton.machinery.block.entity;
 
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
+import net.pitan76.mcpitanlib.api.tile.v2.BlockEntityTypeBuilder;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
 import net.pitan76.mcpitanlib.midohra.block.entity.TypedBlockEntityTypeWrapper;
 import net.pitan76.nexton.machinery.block.Blocks;
-import net.pitan76.mcpitanlib.api.tile.BlockEntityTypeBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,10 @@ public class BlockEntities {
     public static TypedBlockEntityTypeWrapper<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE;
 
     public static void init() {
-        FUEL_GENERATOR = registerWithEnergyStorage("fuel_generator", BlockEntityTypeBuilder.create((e) -> new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR, e), Blocks.FUEL_GENERATOR.get()));
-        FUEL_GENERATOR_MK2 = registerWithEnergyStorage("fuel_generator_mk2", BlockEntityTypeBuilder.create((e) -> new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR_MK2, e, 5, 20_000, 1500), Blocks.FUEL_GENERATOR_MK2.get()));
-        FUEL_GENERATOR_MK3 = registerWithEnergyStorage("fuel_generator_mk3", BlockEntityTypeBuilder.create((e) -> new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR_MK3, e, 10, 30_000, 3000), Blocks.FUEL_GENERATOR_MK3.get()));
-        ELECTRIC_FURNACE = registerWithEnergyStorage("electric_furnace", BlockEntityTypeBuilder.create(ElectricFurnaceBlockEntity::new, Blocks.ELECTRIC_FURNACE.get()));
+        FUEL_GENERATOR = registerWithEnergyStorage("fuel_generator", BlockEntityTypeBuilder.createA(e -> new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR, e), () -> Blocks.FUEL_GENERATOR.get()));
+        FUEL_GENERATOR_MK2 = registerWithEnergyStorage("fuel_generator_mk2", BlockEntityTypeBuilder.createA(e -> new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR_MK2, e, 5, 20_000, 1500), () -> Blocks.FUEL_GENERATOR_MK2.get()));
+        FUEL_GENERATOR_MK3 = registerWithEnergyStorage("fuel_generator_mk3", BlockEntityTypeBuilder.createA(e -> new FuelGeneratorBlockEntity(BlockEntities.FUEL_GENERATOR_MK3, e, 10, 30_000, 3000), () -> Blocks.FUEL_GENERATOR_MK3.get()));
+        ELECTRIC_FURNACE = registerWithEnergyStorage("electric_furnace", BlockEntityTypeBuilder.createA(ElectricFurnaceBlockEntity::new, () -> Blocks.ELECTRIC_FURNACE.get()));
     }
 
     public static <T extends CompatBlockEntity> TypedBlockEntityTypeWrapper<T> register(String id, BlockEntityTypeBuilder<T> builder) {
